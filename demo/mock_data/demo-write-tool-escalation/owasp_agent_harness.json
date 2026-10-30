@@ -1,0 +1,7 @@
+{
+  "tool": "owasp-agent-security-harness",
+  "version": "1.2.0",
+  "prompt_injection_detected": false,
+  "excessive_agency": true,
+  "data_disclosure": false
+}

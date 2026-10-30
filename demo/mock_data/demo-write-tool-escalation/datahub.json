@@ -1,0 +1,6 @@
+{
+  "tool": "datahub",
+  "version": "0.13.0",
+  "lineage_freshness": "current",
+  "tables_discovered": []
+}

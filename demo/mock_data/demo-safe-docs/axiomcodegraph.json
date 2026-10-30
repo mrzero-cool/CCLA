@@ -1,0 +1,9 @@
+{
+  "tool": "axiomcodegraph",
+  "version": "1.1.0",
+  "compiler_grounded": true,
+  "test_selection_hints": [
+    "python-unit-tests"
+  ],
+  "impact_score": 0.3
+}

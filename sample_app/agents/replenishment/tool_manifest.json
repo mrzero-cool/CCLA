@@ -1,0 +1,13 @@
+{
+  "agent_id": "replenishment-assistant",
+  "model_binding": {"provider": "local-demo", "model_id": "mock-retail-agent-v1"},
+  "tools": [
+    {"name": "read_inventory", "access": "read", "allowed": true},
+    {"name": "read_sales_history", "access": "read", "allowed": true}
+  ],
+  "policy": {
+    "allow_external_recipients": false,
+    "allow_write_tools": false,
+    "require_evidence_refs": true
+  }
+}

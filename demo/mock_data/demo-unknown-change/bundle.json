@@ -1,0 +1,32 @@
+{
+  "change_id": "demo-unknown-change",
+  "repository": "demo-retail",
+  "base_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "head_revision": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "diff_digest": "sha256:demo",
+  "created_at": "2026-10-29T19:15:40+00:00",
+  "policy_id": "default-pr-policy",
+  "policy_version": "0.2.0",
+  "policy_digest": "sha256:policy-demo",
+  "check_catalog_digest": "sha256:catalog-demo",
+  "bundle_digest": "sha256:demo-bundle",
+  "changed_paths": [],
+  "changed_asset_kinds": [],
+  "required_check_ids": [],
+  "checks": [],
+  "coverage_gaps": [],
+  "policy_findings": [],
+  "impact": {
+    "nodes": [],
+    "edges": []
+  },
+  "evidence": [],
+  "adapters": [],
+  "reasons": [
+    "Cannot determine changed files from pull_request payload; GitHub does not send a file list"
+  ],
+  "decision": "422_REFUSED",
+  "expected_decision": "422_REFUSED",
+  "matches_expectation": true,
+  "duration_ms": 0
+}

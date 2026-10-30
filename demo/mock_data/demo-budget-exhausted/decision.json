@@ -1,0 +1,6 @@
+{
+  "decision": "WARN",
+  "reasons": [
+    "Non-blocking evidence gap: gap-optional-budget-exhausted (budget_exhausted)"
+  ]
+}

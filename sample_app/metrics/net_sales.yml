@@ -1,0 +1,5 @@
+metric: net_sales
+definition: sum(unit_price * quantity * (1 - discount_rate))
+owner: demo-retail-analytics
+criticality: high
+currency: USD

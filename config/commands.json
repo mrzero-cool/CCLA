@@ -1,0 +1,50 @@
+{
+  "$comment": "Version-controlled command allow-list. command_ref values in check_catalog.json resolve ONLY to these entries. No shell strings, no PR-supplied commands.",
+  "commands": {
+    "check.static-manifest-validation": {
+      "cwd": ".",
+      "timeout_seconds": 60,
+      "argvs": [
+        ["python", "-m", "json.tool", "data/contracts/sales_contract.json"],
+        ["python", "-m", "json.tool", "data/dbt/manifest.json"],
+        ["python", "-m", "json.tool", "agents/replenishment/tool_manifest.json"]
+      ]
+    },
+    "check.python-unit-tests": {
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "argvs": [["python", "-m", "pytest", "tests/test_pricing.py", "-q"]]
+    },
+    "check.data-contract-tests": {
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "argvs": [["python", "-m", "pytest", "tests/contract", "-q"]]
+    },
+    "check.agent-security-smoke": {
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "argvs": [["python", "-m", "pytest", "tests/agent/test_security.py", "-q"]]
+    },
+    "check.agent-behavior-evals": {
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "argvs": [["python", "-m", "pytest", "tests/agent/test_behavior.py", "-q"]]
+    },
+    "check.full-applicable-tests": {
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "argvs": [["python", "-m", "pytest", "tests", "-q"]]
+    },
+    "check.policy-security-smoke": {
+      "cwd": ".",
+      "timeout_seconds": 60,
+      "argvs": [["python", "-m", "json.tool", "agents/replenishment/tool_manifest.json"]]
+    },
+    "check.mutation-smoke": {
+      "$comment": "Demo stand-in: re-runs the pricing unit tests. A real mutation tester would replace this entry.",
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "argvs": [["python", "-m", "pytest", "tests/test_pricing.py", "-q"]]
+    }
+  }
+}

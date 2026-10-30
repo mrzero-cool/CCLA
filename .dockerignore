@@ -1,0 +1,16 @@
+.git
+.github
+.venv
+**/__pycache__
+**/*.pyc
+**/*.pyo
+.pytest_cache
+artifacts
+sample_app/artifacts
+sample_app/.git
+benchmark/results
+docs
+tests
+*.md
+!README.md
+.env

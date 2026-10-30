@@ -1,0 +1,6 @@
+{
+  "decision": "422_REFUSED",
+  "reasons": [
+    "Cannot determine changed files from pull_request payload; GitHub does not send a file list"
+  ]
+}

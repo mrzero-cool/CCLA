@@ -1,0 +1,68 @@
+{
+  "schema_version": "0.2.0",
+  "change": {
+    "change_id": "demo-pr-17",
+    "repository": "demo/retail-analytics",
+    "base_revision": "1111111111111111111111111111111111111111",
+    "head_revision": "2222222222222222222222222222222222222222",
+    "diff_digest": "sha256:replace-with-real-digest",
+    "trigger": "pull_request"
+  },
+  "assets": [
+    {
+      "asset_id": "dbt:model:stg_sales",
+      "kind": "data.model",
+      "name": "stg_sales",
+      "criticality": "high",
+      "identity_status": "stable",
+      "attributes": {"framework": "dbt"}
+    },
+    {
+      "asset_id": "agent:replenishment:prompt",
+      "kind": "ai.prompt",
+      "name": "replenishment system prompt",
+      "criticality": "high",
+      "identity_status": "stable",
+      "path": "agents/replenishment/prompts/system.md"
+    }
+  ],
+  "checks": [
+    {
+      "check_id": "static-manifest-validation",
+      "category": "quality",
+      "requirement": "mandatory",
+      "status": "passed",
+      "selection_reason": ["always required"],
+      "exit_code": 0,
+      "duration_ms": 1100,
+      "input_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "environment_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "artifact_refs": ["artifact://demo/static-validation.json"]
+    },
+    {
+      "check_id": "agent-behavior-evals",
+      "category": "agent_behavior",
+      "requirement": "mandatory",
+      "status": "not_run",
+      "selection_reason": ["prompt changed; evaluation required"],
+      "artifact_refs": []
+    }
+  ],
+  "required_check_ids": ["static-manifest-validation", "agent-behavior-evals"],
+  "coverage_gaps": [
+    {
+      "gap_id": "gap-agent-lineage-stale",
+      "kind": "stale_evidence",
+      "severity": "critical",
+      "subject_refs": ["agent:replenishment:prompt"],
+      "why_it_matters": "Agent/tool dependencies are not verified against the current prompt and tool manifest.",
+      "blocking": true,
+      "required": true,
+      "remediation": "Refresh agent config evidence and run the required behavior/security checks."
+    }
+  ],
+  "policy_findings": [],
+  "policy_id": "default-pr-policy",
+  "policy_version": "0.2.0",
+  "policy_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+}

@@ -1,0 +1,6 @@
+# Generated files must not contaminate revision-bound CLCA analysis.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+artifacts/
+.env

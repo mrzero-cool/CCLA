@@ -1,0 +1,6 @@
+{
+  "decision": "INCOMPLETE",
+  "reasons": [
+    "Mandatory check not proven passed: agent-behavior-evals (unsupported)"
+  ]
+}

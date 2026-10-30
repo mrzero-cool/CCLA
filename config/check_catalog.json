@@ -1,0 +1,79 @@
+{
+  "unknown_critical_fallback_check_ids": ["full-applicable-tests", "policy-security-smoke"],
+  "checks": [
+    {
+      "check_id": "static-manifest-validation",
+      "category": "quality",
+      "requirement": "mandatory",
+      "triggers": ["*"],
+      "estimated_seconds": 2,
+      "priority": 100,
+      "command_ref": "check.static-manifest-validation"
+    },
+    {
+      "check_id": "python-unit-tests",
+      "category": "unit",
+      "requirement": "conditional",
+      "triggers": ["code.function", "code.class", "api.endpoint"],
+      "estimated_seconds": 8,
+      "priority": 70,
+      "command_ref": "check.python-unit-tests"
+    },
+    {
+      "check_id": "data-contract-tests",
+      "category": "contract",
+      "requirement": "conditional",
+      "triggers": ["data.column", "data.table", "data.model", "business.metric"],
+      "estimated_seconds": 10,
+      "priority": 95,
+      "command_ref": "check.data-contract-tests"
+    },
+    {
+      "check_id": "agent-security-smoke",
+      "category": "security",
+      "requirement": "conditional",
+      "triggers": ["ai.agent", "ai.tool", "ai.model_binding", "ai.policy"],
+      "estimated_seconds": 5,
+      "priority": 100,
+      "command_ref": "check.agent-security-smoke"
+    },
+    {
+      "check_id": "agent-behavior-evals",
+      "category": "agent_behavior",
+      "requirement": "conditional",
+      "triggers": ["ai.prompt", "ai.model_binding", "ai.agent"],
+      "estimated_seconds": 15,
+      "priority": 80,
+      "command_ref": "check.agent-behavior-evals"
+    },
+    {
+      "check_id": "full-applicable-tests",
+      "category": "integration",
+      "requirement": "optional",
+      "triggers": ["*"],
+      "estimated_seconds": 45,
+      "priority": 40,
+      "fallback_on_unknown": true,
+      "command_ref": "check.full-applicable-tests"
+    },
+    {
+      "check_id": "policy-security-smoke",
+      "category": "security",
+      "requirement": "optional",
+      "triggers": ["*"],
+      "estimated_seconds": 6,
+      "priority": 90,
+      "fallback_on_unknown": true,
+      "command_ref": "check.policy-security-smoke"
+    },
+    {
+      "check_id": "mutation-smoke",
+      "category": "quality",
+      "requirement": "optional",
+      "triggers": ["code.function", "data.model"],
+      "estimated_seconds": 25,
+      "priority": 30,
+      "command_ref": "check.mutation-smoke"
+    }
+  ]
+}

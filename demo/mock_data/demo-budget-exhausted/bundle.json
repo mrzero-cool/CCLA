@@ -1,0 +1,91 @@
+{
+  "change_id": "demo-budget-exhausted",
+  "repository": "demo-retail",
+  "base_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "head_revision": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "diff_digest": "sha256:demo",
+  "created_at": "2026-10-29T19:15:40+00:00",
+  "policy_id": "default-pr-policy",
+  "policy_version": "0.2.0",
+  "policy_digest": "sha256:policy-demo",
+  "check_catalog_digest": "sha256:catalog-demo",
+  "bundle_digest": "sha256:demo-bundle",
+  "changed_paths": [
+    "backend/services/pricing.py"
+  ],
+  "changed_asset_kinds": [
+    "code.function"
+  ],
+  "required_check_ids": [
+    "python-unit-tests",
+    "static-manifest-validation"
+  ],
+  "checks": [
+    {
+      "check_id": "static-manifest-validation",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 80
+    },
+    {
+      "check_id": "python-unit-tests",
+      "status": "timed_out",
+      "exit_code": 124,
+      "duration_ms": 60000,
+      "stdout_excerpt": "check timed out at 60s budget"
+    }
+  ],
+  "coverage_gaps": [
+    {
+      "gap_id": "gap-optional-budget-exhausted",
+      "kind": "budget",
+      "blocking": false,
+      "required": false
+    }
+  ],
+  "policy_findings": [],
+  "impact": {
+    "nodes": [
+      {
+        "id": "repo:demo-retail",
+        "label": "demo-retail repo",
+        "kind": "repository"
+      },
+      {
+        "id": "fn:pricing.calculate",
+        "label": "pricing.calculate()",
+        "kind": "code.function",
+        "path": "backend/services/pricing.py"
+      }
+    ],
+    "edges": [
+      {
+        "source": "repo:demo-retail",
+        "target": "fn:pricing.calculate",
+        "kind": "CONTAINS"
+      }
+    ]
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev-budget-1",
+      "evidence_type": "file_hash",
+      "observed_revision": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "freshness": "current"
+    }
+  ],
+  "adapters": [
+    {
+      "name": "python-ast",
+      "assets": 1,
+      "relationships": 1
+    }
+  ],
+  "reasons": [
+    "Non-blocking evidence gap: gap-optional-budget-exhausted (budget_exhausted)"
+  ],
+  "decision": "WARN",
+  "expected_decision": "WARN",
+  "matches_expectation": true,
+  "duration_ms": 60150
+}

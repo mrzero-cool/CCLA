@@ -1,0 +1,6 @@
+{
+  "tool": "enola",
+  "version": "2.0.1",
+  "cross_repo_edges": 0,
+  "architecture_drift": true
+}

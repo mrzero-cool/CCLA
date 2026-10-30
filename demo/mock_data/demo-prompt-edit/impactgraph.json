@@ -1,0 +1,13 @@
+{
+  "tool": "impactgraph",
+  "version": "0.4.2",
+  "assets": 3,
+  "edges": 1,
+  "changed_atoms": [
+    "agents/replenishment/prompts/system.md"
+  ],
+  "affected_consumers": [
+    "prompt:system",
+    "agent:replenishment"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "decision": "BLOCK",
+  "reasons": [
+    "Mandatory check failed: agent-security-smoke",
+    "Policy BLOCK: agent_policy.new_write_tool_requires_review"
+  ]
+}

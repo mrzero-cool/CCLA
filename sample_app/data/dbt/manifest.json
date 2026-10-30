@@ -1,0 +1,36 @@
+{
+  "metadata": {
+    "dbt_schema_version": "v1.5.0",
+    "note": "Synthetic checked-in lineage manifest for the CLCA demo benchmark."
+  },
+  "nodes": {
+    "model.retail.stg_sales": {
+      "resource_type": "model",
+      "name": "stg_sales",
+      "database": "retail",
+      "path": "models/stg_sales.sql",
+      "raw_code": "select customer_id, unit_price, quantity, discount_rate, unit_price * quantity * (1 - discount_rate) as net_sales from raw_sales",
+      "columns": {
+        "customer_id": {"type": "string"},
+        "unit_price": {"type": "number"},
+        "quantity": {"type": "integer"},
+        "discount_rate": {"type": "number"},
+        "net_sales": {"type": "number"}
+      },
+      "depends_on": {"nodes": ["source.retail.raw_sales"]}
+    }
+  },
+  "sources": {
+    "source.retail.raw_sales": {
+      "resource_type": "source",
+      "name": "raw_sales",
+      "path": "sources/raw_sales.yml",
+      "columns": {
+        "customer_id": {"type": "string"},
+        "unit_price": {"type": "number"},
+        "quantity": {"type": "integer"},
+        "discount_rate": {"type": "number"}
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "policy_id": "default-pr-policy",
+  "version": "0.2.0",
+  "status_precedence": ["BLOCK", "INCOMPLETE", "WARN", "PASS"],
+  "invariants": {
+    "mandatory_check_missing_never_passes": true,
+    "mandatory_check_failure_blocks": true,
+    "blocking_policy_finding_blocks": true,
+    "critical_unresolved_evidence_requires_fallback_or_incomplete": true,
+    "llm_cannot_choose_final_status": true,
+    "embedding_similarity_cannot_skip_mandatory_eval": true
+  },
+  "agent_policy": {
+    "new_write_tool_requires_review": true,
+    "new_external_recipient_tool_requires_review": true,
+    "model_binding_change_requires_behavior_eval": true,
+    "prompt_change_requires_evaluation": true
+  },
+  "lineage_policy": {
+    "stale_lineage_is_not_absence_of_dependency": true,
+    "critical_unknown_requires_fallback_or_incomplete": true,
+    "dynamic_probe_mode": "metadata_only_read_only_allowlist"
+  },
+  "mitigation_policy": {
+    "human_approval_required": true,
+    "temporary_worktree_only": true,
+    "auto_push": false,
+    "auto_merge": false,
+    "rerun_mandatory_checks": true
+  }
+}

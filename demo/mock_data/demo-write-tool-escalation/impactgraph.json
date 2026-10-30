@@ -1,0 +1,15 @@
+{
+  "tool": "impactgraph",
+  "version": "0.4.2",
+  "assets": 4,
+  "edges": 3,
+  "changed_atoms": [
+    "agents/replenishment/agent.py",
+    "agents/replenishment/tool_manifest.json"
+  ],
+  "affected_consumers": [
+    "agent:replenishment",
+    "manifest:tool_manifest",
+    "tool:write_purchase_orders"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "tool": "impactgraph",
+  "version": "0.4.2",
+  "assets": 2,
+  "edges": 1,
+  "changed_atoms": [
+    "backend/services/pricing.py"
+  ],
+  "affected_consumers": [
+    "fn:pricing.calculate"
+  ]
+}

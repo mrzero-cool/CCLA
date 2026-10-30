@@ -1,0 +1,77 @@
+{
+  "change_id": "demo-safe-docs",
+  "repository": "demo-retail",
+  "base_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "head_revision": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "diff_digest": "sha256:demo",
+  "created_at": "2026-10-29T19:15:40+00:00",
+  "policy_id": "default-pr-policy",
+  "policy_version": "0.2.0",
+  "policy_digest": "sha256:policy-demo",
+  "check_catalog_digest": "sha256:catalog-demo",
+  "bundle_digest": "sha256:demo-bundle",
+  "changed_paths": [
+    "README.md",
+    "docs/architecture.md"
+  ],
+  "changed_asset_kinds": [
+    "docs"
+  ],
+  "required_check_ids": [
+    "static-manifest-validation"
+  ],
+  "checks": [
+    {
+      "check_id": "static-manifest-validation",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 120
+    }
+  ],
+  "coverage_gaps": [],
+  "policy_findings": [],
+  "impact": {
+    "nodes": [
+      {
+        "id": "repo:demo-retail",
+        "label": "demo-retail repo",
+        "kind": "repository"
+      },
+      {
+        "id": "file:README.md",
+        "label": "README.md",
+        "kind": "docs",
+        "path": "README.md"
+      }
+    ],
+    "edges": [
+      {
+        "source": "repo:demo-retail",
+        "target": "file:README.md",
+        "kind": "CONTAINS"
+      }
+    ]
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev-docs-1",
+      "evidence_type": "file_hash",
+      "observed_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "freshness": "current"
+    }
+  ],
+  "adapters": [
+    {
+      "name": "python-ast",
+      "assets": 1,
+      "relationships": 1
+    }
+  ],
+  "reasons": [
+    "No runtime asset changed; only the always-required fast check is selected."
+  ],
+  "decision": "PASS",
+  "expected_decision": "PASS",
+  "matches_expectation": true,
+  "duration_ms": 850
+}

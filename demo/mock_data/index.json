@@ -1,0 +1,137 @@
+{
+  "generated_at": "2026-10-29T19:15:40+00:00",
+  "scenario_count": 6,
+  "scenarios": [
+    {
+      "scenario_id": "demo-safe-docs",
+      "name": "Docs-only change",
+      "family": "safe_low_impact",
+      "description": "README updated with installation notes. No code, data, or AI assets touched.",
+      "expected_decision": "PASS",
+      "changed_files": [
+        "README.md",
+        "docs/architecture.md"
+      ],
+      "mandatory_checks": [
+        "static-manifest-validation"
+      ],
+      "linked_tools": [
+        "impactgraph",
+        "axiomcodegraph",
+        "enola",
+        "code_system_graph",
+        "datahub",
+        "owasp_agent_harness"
+      ]
+    },
+    {
+      "scenario_id": "demo-write-tool-escalation",
+      "name": "Agent write-tool escalation",
+      "family": "agent_ai_permissions",
+      "description": "Replenishment agent gains a new `write_purchase_orders` tool with write access. Unit tests still pass, but policy blocks on new write tool.",
+      "expected_decision": "BLOCK",
+      "changed_files": [
+        "agents/replenishment/agent.py",
+        "agents/replenishment/tool_manifest.json"
+      ],
+      "mandatory_checks": [
+        "agent-security-smoke",
+        "agent-behavior-evals",
+        "static-manifest-validation"
+      ],
+      "linked_tools": [
+        "impactgraph",
+        "axiomcodegraph",
+        "enola",
+        "code_system_graph",
+        "datahub",
+        "owasp_agent_harness"
+      ]
+    },
+    {
+      "scenario_id": "demo-column-rename",
+      "name": "dbt column rename (contract stale)",
+      "family": "data_lineage",
+      "description": "`customer_id` renamed to `client_id` in dbt manifest. SQL model updated but downstream dashboard contract not refreshed \u2014 cross-layer data impact.",
+      "expected_decision": "BLOCK",
+      "changed_files": [
+        "data/dbt/manifest.json",
+        "data/dbt/models/stg_sales.sql",
+        "metrics/net_sales.yml"
+      ],
+      "mandatory_checks": [
+        "data-contract-tests",
+        "static-manifest-validation"
+      ],
+      "linked_tools": [
+        "impactgraph",
+        "axiomcodegraph",
+        "enola",
+        "code_system_graph",
+        "datahub",
+        "owasp_agent_harness"
+      ]
+    },
+    {
+      "scenario_id": "demo-prompt-edit",
+      "name": "System prompt edit",
+      "family": "agent_ai_permissions",
+      "description": "Replenishment agent system prompt changed to 'Always cite evidence_refs'. Behavior eval can't run in this environment \u2014 INCOMPLETE, not PASS.",
+      "expected_decision": "INCOMPLETE",
+      "changed_files": [
+        "agents/replenishment/prompts/system.md"
+      ],
+      "mandatory_checks": [
+        "agent-behavior-evals",
+        "static-manifest-validation"
+      ],
+      "linked_tools": [
+        "impactgraph",
+        "axiomcodegraph",
+        "enola",
+        "code_system_graph",
+        "datahub",
+        "owasp_agent_harness"
+      ]
+    },
+    {
+      "scenario_id": "demo-budget-exhausted",
+      "name": "Budget exhausted mid-run",
+      "family": "safe_low_impact",
+      "description": "Small code change but the validation budget ran out before all planned checks could execute \u2014 WARN, not PASS.",
+      "expected_decision": "WARN",
+      "changed_files": [
+        "backend/services/pricing.py"
+      ],
+      "mandatory_checks": [
+        "python-unit-tests",
+        "static-manifest-validation"
+      ],
+      "linked_tools": [
+        "impactgraph",
+        "axiomcodegraph",
+        "enola",
+        "code_system_graph",
+        "datahub",
+        "owasp_agent_harness"
+      ]
+    },
+    {
+      "scenario_id": "demo-unknown-change",
+      "name": "Unknown change set (webhook without file list)",
+      "family": "safe_low_impact",
+      "description": "GitHub webhook delivered no file list (real pull_request webhooks never do). CLCA refuses to guess \u2014 422, no run started, no clean-tree claim.",
+      "expected_decision": "422_REFUSED",
+      "changed_files": [],
+      "mandatory_checks": [],
+      "linked_tools": [
+        "impactgraph",
+        "axiomcodegraph",
+        "enola",
+        "code_system_graph",
+        "datahub",
+        "owasp_agent_harness"
+      ]
+    }
+  ]
+}

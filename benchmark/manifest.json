@@ -1,0 +1,42 @@
+{
+  "benchmark_version": "0.1.0",
+  "description": "Synthetic engineering benchmark for cross-layer change assurance; not a claim of production generalization.",
+  "sample_app": "sample_app (planned; see architecture document)",
+  "scenario_count": 48,
+  "families": [
+    {"name": "safe_low_impact", "count": 12},
+    {"name": "code_api", "count": 12},
+    {"name": "data_lineage", "count": 12},
+    {"name": "agent_ai_permissions", "count": 12}
+  ],
+  "configurations": [
+    "baseline_full_applicable_suite",
+    "native_test_selector",
+    "best_applicable_existing_tool",
+    "clca_static_only",
+    "clca_integrated_verification"
+  ],
+  "required_outputs": [
+    "raw_scenario_results.jsonl",
+    "summary_metrics.json",
+    "coverage_and_limitations.md"
+  ],
+  "metrics": [
+    "failure_revealing_test_recall",
+    "seeded_regression_detection",
+    "false_block_rate",
+    "evidence_completeness",
+    "decision_soundness",
+    "wall_clock_time",
+    "execution_cost",
+    "test_runtime_reduction",
+    "fix_utility"
+  ],
+  "anti_gaming_rules": [
+    "Never report PASS if mandatory evidence is absent or stale.",
+    "Report raw counts and unsupported cases for every tool.",
+    "Do not compare metrics derived from different datasets as if they were directly comparable.",
+    "Publish every case where the full-suite oracle could not establish ground truth.",
+    "Report time reduction together with regression detection and false-block rate."
+  ]
+}

@@ -1,0 +1,741 @@
+{
+  "schema_version": "0.1.0",
+  "scenarios": [
+    {
+      "scenario_id": "S001",
+      "family": "safe_low_impact",
+      "name": "docs-only-change",
+      "expected_status": "PASS",
+      "changed_asset_kinds": [
+        "docs"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "No runtime asset changed; only the always-required fast check is selected."
+    },
+    {
+      "scenario_id": "S002",
+      "family": "safe_low_impact",
+      "name": "comment-only-python-change",
+      "expected_status": "PASS",
+      "changed_asset_kinds": [
+        "docs"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Comment change should not trigger unrelated integration checks."
+    },
+    {
+      "scenario_id": "S003",
+      "family": "safe_low_impact",
+      "name": "format-only-python-change",
+      "expected_status": "PASS",
+      "changed_asset_kinds": [
+        "code.function"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "python-unit-tests"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Formatting-only change may select unit tests but should not be blocked."
+    },
+    {
+      "scenario_id": "S004",
+      "family": "safe_low_impact",
+      "name": "local-variable-rename-equivalent",
+      "expected_status": "PASS",
+      "changed_asset_kinds": [
+        "code.function"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "python-unit-tests"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Behavior stays equivalent; checks pass."
+    },
+    {
+      "scenario_id": "S005",
+      "family": "safe_low_impact",
+      "name": "test-description-update",
+      "expected_status": "PASS",
+      "changed_asset_kinds": [
+        "test.check"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Test description changed without altering assertions."
+    },
+    {
+      "scenario_id": "S006",
+      "family": "safe_low_impact",
+      "name": "unrelated-helper-added",
+      "expected_status": "PASS",
+      "changed_asset_kinds": [
+        "code.function"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "python-unit-tests"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "New helper has no downstream impact and its local tests pass."
+    },
+    {
+      "scenario_id": "S007",
+      "family": "safe_low_impact",
+      "name": "safe-dependency-patch",
+      "expected_status": "WARN",
+      "changed_asset_kinds": [
+        "deployment.config"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Optional dependency audit is not yet available; warning is disclosed."
+    },
+    {
+      "scenario_id": "S008",
+      "family": "safe_low_impact",
+      "name": "sql-whitespace-only",
+      "expected_status": "PASS",
+      "changed_asset_kinds": [
+        "data.model"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "data-contract-tests"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "SQL formatting changes but schema and semantics remain equivalent."
+    },
+    {
+      "scenario_id": "S009",
+      "family": "safe_low_impact",
+      "name": "unrelated-agent-documentation",
+      "expected_status": "PASS",
+      "changed_asset_kinds": [
+        "docs"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Agent docs changed but agent prompt and tools did not."
+    },
+    {
+      "scenario_id": "S010",
+      "family": "safe_low_impact",
+      "name": "generated-metadata-refresh",
+      "expected_status": "PASS",
+      "changed_asset_kinds": [
+        "data.model"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "data-contract-tests"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Generated metadata is refreshed and contract remains valid."
+    },
+    {
+      "scenario_id": "S011",
+      "family": "safe_low_impact",
+      "name": "type-annotation-only",
+      "expected_status": "PASS",
+      "changed_asset_kinds": [
+        "code.function"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "python-unit-tests"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Annotation change preserves runtime behavior in the fixture."
+    },
+    {
+      "scenario_id": "S012",
+      "family": "safe_low_impact",
+      "name": "safe-refactor-with-contract-preserved",
+      "expected_status": "PASS",
+      "changed_asset_kinds": [
+        "code.function",
+        "data.model"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "python-unit-tests",
+        "data-contract-tests"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Cross-layer checks pass after a verified equivalent refactor."
+    },
+    {
+      "scenario_id": "S013",
+      "family": "code_api",
+      "name": "pricing-negative-quantity-regression",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "code.function"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "python-unit-tests"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "A seeded logic defect causes a mandatory unit assertion to fail."
+    },
+    {
+      "scenario_id": "S014",
+      "family": "code_api",
+      "name": "api-response-field-renamed-consumer-not-updated",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "api.endpoint"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "python-unit-tests"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "API contract or consumer test fails."
+    },
+    {
+      "scenario_id": "S015",
+      "family": "code_api",
+      "name": "discount-boundary-validation-removed",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "code.function"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "python-unit-tests"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "Boundary/security validation is removed and the relevant test catches it."
+    },
+    {
+      "scenario_id": "S016",
+      "family": "code_api",
+      "name": "authorization-guard-deleted",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "api.endpoint"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "python-unit-tests"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "Known policy violation blocks regardless of aggregate risk score."
+    },
+    {
+      "scenario_id": "S017",
+      "family": "code_api",
+      "name": "exception-semantics-changed",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "code.function"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "python-unit-tests"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "Error behavior regression is observed."
+    },
+    {
+      "scenario_id": "S018",
+      "family": "code_api",
+      "name": "route-prefix-changed-consumer-stale",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "api.endpoint"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "python-unit-tests"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "API/consumer path mismatch fails contract validation."
+    },
+    {
+      "scenario_id": "S019",
+      "family": "code_api",
+      "name": "null-handling-regression",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "code.function"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "python-unit-tests"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "Null input causes seeded regression."
+    },
+    {
+      "scenario_id": "S020",
+      "family": "code_api",
+      "name": "return-type-contract-break",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "code.function"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "python-unit-tests"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "Consumer assertion fails after response type changes."
+    },
+    {
+      "scenario_id": "S021",
+      "family": "code_api",
+      "name": "integration-test-missing-for-new-path",
+      "expected_status": "INCOMPLETE",
+      "changed_asset_kinds": [
+        "api.endpoint"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "python-unit-tests"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Required integration evidence is absent and cannot be treated as success."
+    },
+    {
+      "scenario_id": "S022",
+      "family": "code_api",
+      "name": "dynamic-call-impact-unresolved",
+      "expected_status": "INCOMPLETE",
+      "changed_asset_kinds": [
+        "code.function"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "python-unit-tests"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Dynamic call path remains unknown; broader suite or incomplete status is required."
+    },
+    {
+      "scenario_id": "S023",
+      "family": "code_api",
+      "name": "safe-function-extraction",
+      "expected_status": "PASS",
+      "changed_asset_kinds": [
+        "code.function"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "python-unit-tests"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Equivalent function extraction; no regression detected."
+    },
+    {
+      "scenario_id": "S024",
+      "family": "code_api",
+      "name": "test-selector-omits-failure-revealing-test",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "code.function"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "python-unit-tests"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "Benchmark oracle reveals a regression the selector failed to cover; decision must not be presented as PASS."
+    },
+    {
+      "scenario_id": "S025",
+      "family": "data_lineage",
+      "name": "column-renamed-and-all-consumers-updated",
+      "expected_status": "PASS",
+      "changed_asset_kinds": [
+        "data.column",
+        "data.model",
+        "code.function"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "data-contract-tests",
+        "python-unit-tests"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "A coordinated change passes downstream contracts."
+    },
+    {
+      "scenario_id": "S026",
+      "family": "data_lineage",
+      "name": "column-renamed-consumer-stale",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "data.column",
+        "data.model"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "data-contract-tests"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "A downstream contract fails on the missing/old column."
+    },
+    {
+      "scenario_id": "S027",
+      "family": "data_lineage",
+      "name": "sql-transformation-formula-regression",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "data.model",
+        "business.metric"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "data-contract-tests"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "Metric formula no longer satisfies the known invariant."
+    },
+    {
+      "scenario_id": "S028",
+      "family": "data_lineage",
+      "name": "column-nullability-tightened",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "data.column"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "data-contract-tests"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "Existing null records violate the changed contract fixture."
+    },
+    {
+      "scenario_id": "S029",
+      "family": "data_lineage",
+      "name": "column-type-changed-without-cast",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "data.column",
+        "data.model"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "data-contract-tests"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "Consumer contract detects type incompatibility."
+    },
+    {
+      "scenario_id": "S030",
+      "family": "data_lineage",
+      "name": "dbt-upstream-dependency-changed",
+      "expected_status": "WARN",
+      "changed_asset_kinds": [
+        "data.model"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "data-contract-tests"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Required checks pass but optional full refresh was skipped under budget."
+    },
+    {
+      "scenario_id": "S031",
+      "family": "data_lineage",
+      "name": "lineage-metadata-stale",
+      "expected_status": "INCOMPLETE",
+      "changed_asset_kinds": [
+        "data.model"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "data-contract-tests"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Stale lineage evidence is recorded; no PASS without required freshness."
+    },
+    {
+      "scenario_id": "S032",
+      "family": "data_lineage",
+      "name": "manifest-edge-missing-for-critical-metric",
+      "expected_status": "INCOMPLETE",
+      "changed_asset_kinds": [
+        "data.model",
+        "business.metric"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "data-contract-tests"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Critical dependency is unknown; fallback is required."
+    },
+    {
+      "scenario_id": "S033",
+      "family": "data_lineage",
+      "name": "dynamic-sql-table-reference-unknown",
+      "expected_status": "INCOMPLETE",
+      "changed_asset_kinds": [
+        "code.function",
+        "data.table"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "data-contract-tests",
+        "python-unit-tests"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Dynamic identifier cannot be resolved statically."
+    },
+    {
+      "scenario_id": "S034",
+      "family": "data_lineage",
+      "name": "read-only-metadata-probe-denied",
+      "expected_status": "INCOMPLETE",
+      "changed_asset_kinds": [
+        "data.table"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "data-contract-tests"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Probe permission is denied; unknown evidence remains explicit."
+    },
+    {
+      "scenario_id": "S035",
+      "family": "data_lineage",
+      "name": "known-column-rename-fix-proposal-passes",
+      "expected_status": "WARN",
+      "changed_asset_kinds": [
+        "data.column",
+        "data.model"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "data-contract-tests"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Human-approved temporary patch passes revalidation; patch is not auto-merged."
+    },
+    {
+      "scenario_id": "S036",
+      "family": "data_lineage",
+      "name": "generated-data-fix-fails-revalidation",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "data.column",
+        "data.model"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "data-contract-tests"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "Suggested fix is not marked validated because a mandatory check still fails."
+    },
+    {
+      "scenario_id": "S037",
+      "family": "agent_ai_permissions",
+      "name": "write-tool-permission-escalation",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "ai.tool",
+        "ai.agent"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "agent-security-smoke",
+        "agent-behavior-evals"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "A prohibited write capability is added despite passing code tests."
+    },
+    {
+      "scenario_id": "S038",
+      "family": "agent_ai_permissions",
+      "name": "new-external-recipient-tool",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "ai.tool",
+        "ai.policy"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "agent-security-smoke"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "Policy denies an unapproved outbound capability."
+    },
+    {
+      "scenario_id": "S039",
+      "family": "agent_ai_permissions",
+      "name": "prompt-output-schema-regression",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "ai.prompt"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "agent-behavior-evals"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "Agent output violates the required JSON schema."
+    },
+    {
+      "scenario_id": "S040",
+      "family": "agent_ai_permissions",
+      "name": "behavior-regression-visible-on-repeat-runs",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "ai.prompt"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "agent-behavior-evals"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "Repeated candidate trials cross a predeclared behavior regression threshold."
+    },
+    {
+      "scenario_id": "S041",
+      "family": "agent_ai_permissions",
+      "name": "model-binding-changed-evaluation-required",
+      "expected_status": "INCOMPLETE",
+      "changed_asset_kinds": [
+        "ai.model_binding"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "agent-security-smoke",
+        "agent-behavior-evals"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "New model binding has not yet received required behavior evaluation."
+    },
+    {
+      "scenario_id": "S042",
+      "family": "agent_ai_permissions",
+      "name": "retrieval-source-changed",
+      "expected_status": "WARN",
+      "changed_asset_kinds": [
+        "ai.agent"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "agent-security-smoke",
+        "agent-behavior-evals"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Checks pass, but optional retrieval quality evaluation is omitted and reported."
+    },
+    {
+      "scenario_id": "S043",
+      "family": "agent_ai_permissions",
+      "name": "cosmetic-prompt-edit-with-tests-passing",
+      "expected_status": "PASS",
+      "changed_asset_kinds": [
+        "ai.prompt"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "agent-behavior-evals"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Prompt edit runs the required eval; embedding similarity did not suppress it."
+    },
+    {
+      "scenario_id": "S044",
+      "family": "agent_ai_permissions",
+      "name": "denied-tool-call-regression",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "ai.tool",
+        "ai.agent"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "agent-security-smoke",
+        "agent-behavior-evals"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "Security scenario observes a prohibited tool invocation."
+    },
+    {
+      "scenario_id": "S045",
+      "family": "agent_ai_permissions",
+      "name": "required-evaluation-artifact-missing",
+      "expected_status": "INCOMPLETE",
+      "changed_asset_kinds": [
+        "ai.prompt"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "agent-behavior-evals"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "No artifact exists for a required eval; result is not assumed to pass."
+    },
+    {
+      "scenario_id": "S046",
+      "family": "agent_ai_permissions",
+      "name": "flaky-baseline-inconclusive",
+      "expected_status": "INCOMPLETE",
+      "changed_asset_kinds": [
+        "ai.prompt"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "agent-behavior-evals"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Repeated runs are inconclusive under the declared stopping rule."
+    },
+    {
+      "scenario_id": "S047",
+      "family": "agent_ai_permissions",
+      "name": "semantically-similar-prompt-change-breaks-behavior",
+      "expected_status": "BLOCK",
+      "changed_asset_kinds": [
+        "ai.prompt"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "agent-behavior-evals"
+      ],
+      "seeded_fault": true,
+      "expected_observation": "High embedding similarity does not suppress a behavior test that catches a regression."
+    },
+    {
+      "scenario_id": "S048",
+      "family": "agent_ai_permissions",
+      "name": "agent-runtime-unavailable",
+      "expected_status": "INCOMPLETE",
+      "changed_asset_kinds": [
+        "ai.agent"
+      ],
+      "expected_mandatory_checks": [
+        "static-manifest-validation",
+        "agent-security-smoke",
+        "agent-behavior-evals"
+      ],
+      "seeded_fault": false,
+      "expected_observation": "Required agent checks cannot execute; missing results are not success."
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "tool": "code_system_graph",
+  "version": "0.9.0",
+  "canonical_ids": [
+    "repo:demo-retail",
+    "prompt:system",
+    "agent:replenishment"
+  ],
+  "inferred_edges": []
+}

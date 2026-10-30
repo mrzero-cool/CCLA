@@ -1,0 +1,19 @@
+{
+  "tool": "code_system_graph",
+  "version": "0.9.0",
+  "canonical_ids": [
+    "repo:demo-retail",
+    "table:sales",
+    "column:customer_id",
+    "column:client_id",
+    "metric:net_sales",
+    "dashboard:exec_dashboard"
+  ],
+  "inferred_edges": [
+    {
+      "source": "column:client_id",
+      "target": "metric:net_sales",
+      "kind": "DERIVES_FROM"
+    }
+  ]
+}

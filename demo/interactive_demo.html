@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLCA Interactive Demo — Judge Playground</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f4f5f9; --bg-raise: #ffffff; --bg-hover: #eef0f7;
+    --fg: #1a1d26; --fg-faint: #656d80; --fg-dim: #9aa3b4;
+    --accent: #2563eb; --accent-hover: #1d4ed8;
+    --pass: #15803d; --warn: #b45309; --block: #dc2626; --incomplete: #6b7280;
+    --border: #d6d8e0; --radius: 8px; --shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  [data-theme="dark"] {
+    --bg: #0b0d12; --bg-raise: #14171d; --bg-hover: #1d2230;
+    --fg: #e8eaed; --fg-faint: #808aa4; --fg-dim: #5c6476;
+    --border: #2a2f3e;
+  }
+  html { background: var(--bg); color: var(--fg); font-family: Inter, system-ui, -apple-system, sans-serif; line-height: 1.5; }
+  body { padding: 24px; max-width: 1400px; margin: 0 auto; }
+  header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+  .subtitle { color: var(--fg-faint); font-size: 13px; margin-left: 12px; }
+  .toolbar { display: flex; gap: 10px; align-items: center; }
+  .btn {
+    background: var(--bg-raise); border: 1px solid var(--border); color: var(--fg);
+    padding: 8px 14px; border-radius: 6px; font-size: 13px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn:hover { background: var(--bg-hover); border-color: var(--fg-dim); }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn.primary:hover { background: var(--accent-hover); }
+  .btn.danger { background: transparent; color: var(--block); border-color: var(--block); }
+  .btn.danger:hover { background: rgba(220,38,38,0.08); }
+  .btn.theme { padding: 8px; border-radius: 50%; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; }
+  .grid { display: grid; grid-template-columns: 320px 1fr; gap: 24px; }
+  .card { background: var(--bg-raise); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .card-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .card-title { font-weight: 600; font-size: 15px; }
+  .card-body { padding: 16px; }
+  .scenario-list { height: calc(100vh - 200px); overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+  .scenario-item {
+    padding: 12px 14px; border-radius: 6px; cursor: pointer; border: 1px solid transparent;
+    background: var(--bg); font-size: 13px; transition: all 0.15s;
+  }
+  .scenario-item:hover { border-color: var(--accent); background: var(--bg-hover); }
+  .scenario-item.selected { border-color: var(--accent); background: var(--accent); color: #fff; }
+  .scenario-item.selected .desc { color: rgba(255,255,255,0.85); }
+  .scenario-name { font-weight: 600; margin-bottom: 4px; display: block; }
+  .desc { color: var(--fg-faint); font-size: 12px; margin-bottom: 6px; display: block; }
+  .meta-row { font-size: 11px; color: var(--fg-dim); display: flex; gap: 10px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+  .badge-pass { background: #f0fdf4; color: var(--pass); border: 1px solid #bbf7d0; }
+  .badge-warn { background: #fffbeb; color: var(--warn); border: 1px solid #fcd34d; }
+  .badge-block { background: #fef2f2; color: var(--block); border: 1px solid #fecaca; }
+  .badge-incomplete { background: #f3f4f6; color: var(--incomplete); border: 1px solid #d1d5db; }
+  .badge-422 { background: #f3f4f6; color: #6b7280; border: 1px solid #d1d5db; }
+  .main-area { height: calc(100vh - 200px); display: flex; flex-direction: column; }
+  .empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--fg-faint); text-align: center; }
+  .empty-state h2 { margin-bottom: 8px; color: var(--fg); }
+  .result-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .decision-large { font-size: 32px; font-weight: 800; letter-spacing: -0.03em; }
+  .decision-reasons { color: var(--fg-faint); font-size: 13px; margin-top: 4px; }
+  .tabs { display: flex; border-bottom: 1px solid var(--border); overflow-x: auto; }
+  .tab { padding: 12px 18px; font-size: 13px; cursor: pointer; color: var(--fg-dim); border-bottom: 2px solid transparent; white-space: nowrap; }
+  .tab:hover { color: var(--fg); background: var(--bg-hover); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-panel { display: none; padding: 20px; overflow-y: auto; flex: 1; }
+  .tab-panel.active { display: block; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .stat-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+  .stat-value { font-size: 22px; font-weight: 700; margin-top: 4px; }
+  .stat-label { font-size: 11px; color: var(--fg-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+  .checks-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .checks-table th { text-align: left; padding: 10px; color: var(--fg-dim); border-bottom: 1px solid var(--border); font-size: 11px; text-transform: uppercase; }
+  .checks-table td { padding: 10px; border-bottom: 1px solid var(--border); }
+  .status-pill { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .st-pass { background: #f0fdf4; color: var(--pass); }
+  .st-failed { background: #fef2f2; color: var(--block); }
+  .st-unsupported { background: #f3f4f6; color: var(--incomplete); }
+  .st-timed_out { background: #fef2f2; color: var(--warn); }
+  .excerpt { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; color: var(--fg-dim); background: var(--bg-hover); padding: 6px 10px; border-radius: 4px; margin-top: 4px; }
+  .graph-canvas { width: 100%; height: 320px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border); }
+  .linked-tool { background: var(--bg-raise); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 12px; }
+  .linked-tool h4 { font-size: 13px; margin-bottom: 8px; color: var(--accent); }
+  .linked-tool pre { font-size: 11px; overflow: auto; max-height: 200px; background: var(--bg); padding: 10px; border-radius: 4px; color: var(--fg); }
+  .policy-toggle { display: flex; align-items: center; gap: 10px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--border); transition: 0.2s; border-radius: 24px; }
+  .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: #fff; transition: 0.2s; border-radius: 50%; }
+  input:checked + .slider { background: var(--accent); }
+  input:checked + .slider:before { transform: translateX(20px); }
+  .faint { color: var(--fg-dim); font-style: italic; font-size: 12px; }
+  .footer { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--fg-dim); font-size: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div style="width:8px;height:8px;background:var(--accent);border-radius:50%;"></div>
+    <div>
+      <h1>CLCA Interactive Demo</h1>
+      <div class="subtitle">Judge Playground &bull; Cross-Layer Change Assurance v0.4</div>
+    </div>
+  </div>
+  <div class="toolbar">
+    <button class="btn theme" id="themeToggle" title="Toggle theme">&#9728;</button>
+    <button class="btn primary" onclick="window.location.reload()">Reset demo</button>
+    <a class="btn" href="../docs/PRODUCTION_READINESS_GAP_ANALYSIS.md" target="_blank">Production gap analysis</a>
+    <a class="btn" href="../docs/LINKED_TOOLS_CATALOG.md" target="_blank">Linked tools catalog</a>
+  </div>
+</header>
+
+<div class="grid">
+  <aside>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Scenarios</span><span class="badge" id="scenarioCount">0</span></div>
+      <div class="card-body">
+        <p class="faint" style="font-size:12px;margin-bottom:12px;">Click a scenario to run it in the demo. Each scenario is a synthetic repo change with expected CLCA decision, impact graph, and linked-tool outputs.</p>
+        <div class="scenario-list" id="scenarioList"></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-area">
+    <div class="empty-state" id="emptyState">
+      <h2>Select a scenario</h2>
+      <p>Choose a scenario from the left to see CLCA's decision, evidence bundle, impact graph, and linked-tool outputs.</p>
+    </div>
+    <div class="result-area card" id="resultArea" style="display:none; height:100%; flex-direction:column;">
+      <div class="result-header">
+        <div>
+          <div id="resName" class="decision-large"></div>
+          <div id="resDesc" class="decision-reasons"></div>
+        </div>
+        <div id="resBadge" class="badge badge-pass"></div>
+      </div>
+      <div class="tabs" id="tabs"></div>
+      <div class="tab-panel active" id="panel-summary">
+        <div class="grid-2" style="margin-bottom:16px;">
+          <div class="stat-card"><div class="stat-label">Decision</div><div class="stat-value" id="statDecision">—</div></div>
+          <div class="stat-card"><div class="stat-label">Duration</div><div class="stat-value" id="statDuration">— ms</div></div>
+          <div class="stat-card"><div class="stat-label">Changed paths</div><div class="stat-value" id="statPaths">—</div></div>
+          <div class="stat-card"><div class="stat-label">Mandatory checks</div><div class="stat-value" id="statMandatory">—</div></div>
+        </div>
+        <h3 style="font-size:14px;margin-bottom:8px;color:var(--fg-faint);text-transform:uppercase;letter-spacing:0.06em;">Decision reasons</h3>
+        <div id="resReasons" style="font-size:13px;color:var(--fg);margin-bottom:16px;"></div>
+        <div class="policy-toggle">
+          <label style="font-size:13px;color:var(--fg-faint);">Tighten policy (simulate stricter rules)</label>
+          <input type="checkbox" id="policyToggle" class="switch-input">
+          <span class="switch"><input type="checkbox" id="policySwitch"><span class="slider"></span></span>
+        </div>
+      </div>
+      <div class="tab-panel" id="panel-checks">
+        <table class="checks-table" id="checksTable">
+          <thead><tr><th>Check</th><th>Status</th><th>Exit</th><th>Duration</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="tab-panel" id="panel-graph">
+        <div class="graph-canvas" id="graphCanvas"></div>
+        <p class="faint" style="margin-top:8px;font-size:12px;">Impact graph: nodes = assets, edges = relationships (CALLS, IMPORTS, WRITES_TO, DERIVES_FROM, etc.)</p>
+      </div>
+      <div class="tab-panel" id="panel-linked">
+        <div id="linkedTools"></div>
+      </div>
+      <div class="tab-panel" id="panel-bundle">
+        <pre id="resBundle" style="font-size:11px;overflow:auto;background:var(--bg);padding:12px;border-radius:6px;color:var(--fg);"></pre>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="footer">
+  CLCA v0.4 demo &mdash; mock data, no network, no secrets. For production requirements see <a href="../docs/PRODUCTION_READINESS_GAP_ANALYSIS.md" target="_blank">production gap analysis</a> and <a href="../docs/LINKED_TOOLS_CATALOG.md" target="_blank">linked tools catalog</a>.
+</div>
+
+<script>
+// Loaded after mock_data.py generates index.json
+let scenarios = [];
+let active = null;
+let policyTightened = false;
+
+async function init() {
+  const res = await fetch("mock_data/index.json");
+  const index = await res.json();
+  scenarios = index.scenarios;
+  document.getElementById("scenarioCount").textContent = scenarios.length;
+  const list = document.getElementById("scenarioList");
+  for (const s of scenarios) {
+    const el = document.createElement("div");
+    el.className = "scenario-item";
+    el.dataset.id = s.scenario_id;
+    el.innerHTML = `
+      <span class="scenario-name">${escapeHtml(s.name)}</span>
+      <span class="desc">${escapeHtml(s.description)}</span>
+      <div class="meta-row">
+        <span>${s.family}</span>
+        <span class="badge badge-${s.expected_decision.toLowerCase().replace('_','-')}">${s.expected_decision}</span>
+      </div>
+    `;
+    el.onclick = () => selectScenario(s.scenario_id);
+    list.appendChild(el);
+  }
+  document.getElementById("themeToggle").onclick = () => {
+    const dark = document.documentElement.dataset.theme === "dark";
+    document.documentElement.dataset.theme = dark ? "light" : "dark";
+  };
+  document.getElementById("policySwitch").onchange = (e) => {
+    policyTightened = e.target.checked;
+    if (active) renderScenario(active);
+  };
+}
+
+function selectScenario(id) {
+  active = id;
+  document.querySelectorAll(".scenario-item").forEach(el => {
+    el.classList.toggle("selected", el.dataset.id === id);
+  });
+  const s = scenarios.find(x => x.scenario_id === id);
+  renderScenario(s.scenario_id);
+}
+
+function renderScenario(id) {
+  const s = scenarios.find(x => x.scenario_id === id);
+  if (!s) return;
+  document.getElementById("emptyState").style.display = "none";
+  document.getElementById("resultArea").style.display = "flex";
+
+  const badge = document.getElementById("resBadge");
+  badge.textContent = s.expected_decision;
+  badge.className = "badge badge-" + s.expected_decision.toLowerCase().replace("_","-");
+
+  document.getElementById("resName").textContent = s.name;
+  document.getElementById("resDesc").textContent = s.description;
+  document.getElementById("statDecision").textContent = s.expected_decision;
+  document.getElementById("statDuration").textContent = s.duration_ms + " ms";
+  document.getElementById("statPaths").textContent = (s.changed_files || []).length;
+  document.getElementById("statMandatory").textContent = (s.mandatory_checks || []).length;
+
+  // Simulate tighter policy: WARN -> BLOCK, PASS -> WARN for security scenarios
+  let displayDecision = s.expected_decision;
+  if (policyTightened) {
+    if (displayDecision === "PASS" && s.family.includes("agent")) displayDecision = "WARN";
+    if (displayDecision === "WARN") displayDecision = "BLOCK";
+  }
+  document.getElementById("statDecision").textContent = displayDecision + (policyTightened ? " *" : "");
+
+  document.getElementById("resReasons").innerHTML = (s.reasons || []).map(r => "<div>&#8226; " + escapeHtml(r) + "</div>").join("");
+
+  // Tabs
+  const tabs = document.getElementById("tabs");
+  tabs.innerHTML = `
+    <div class="tab active" onclick="switchTab(this,'summary')">Summary</div>
+    <div class="tab" onclick="switchTab(this,'checks')">Checks</div>
+    <div class="tab" onclick="switchTab(this,'graph')">Impact graph</div>
+    <div class="tab" onclick="switchTab(this,'linked')">Linked tools</div>
+    <div class="tab" onclick="switchTab(this,'bundle')">Evidence bundle</div>
+  `;
+
+  // Checks table
+  const tbody = document.querySelector("#checksTable tbody");
+  tbody.innerHTML = (s.checks || []).map(c => `
+    <tr>
+      <td><strong>${escapeHtml(c.check_id)}</strong></td>
+      <td><span class="status-pill st-${c.status}">${c.status}</span></td>
+      <td>${c.exit_code !== null ? c.exit_code : "—"}</td>
+      <td>${c.duration_ms !== null ? c.duration_ms + " ms" : "—"}</td>
+    </tr>
+  `).join("");
+  if (s.checks.length === 0) tbody.innerHTML = "<tr><td colspan=4 class='faint'>No checks started (change set unknown — 422 refused)</td></tr>";
+
+  // Graph (text-based visualization since no Cytoscape in single file)
+  const graph = document.getElementById("graphCanvas");
+  const nodes = (s.impact && s.impact.nodes) || [];
+  const edges = (s.impact && s.impact.edges) || [];
+  graph.innerHTML = `
+    <div style="padding:16px;">
+      <div style="font-size:12px;color:var(--fg-dim);margin-bottom:12px;">${nodes.length} nodes &bull; ${edges.length} edges</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;">
+        ${nodes.map(n => `<div style="background:var(--bg-hover);border:1px solid var(--border);border-radius:6px;padding:8px;font-size:12px;"><div style="font-weight:600">${escapeHtml(n.label)}</div><div style="font-size:11px;color:var(--fg-dim);">${n.kind}</div></div>`).join("")}
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--fg-dim);">${edges.map(e => escapeHtml(e.source) + " &#8594; " + escapeHtml(e.target) + " (" + e.kind + ")").join("<br>") || "No relationships"}</div>
+    </div>
+  `;
+
+  // Linked tools
+  const linked = document.getElementById("linkedTools");
+  linked.innerHTML = (["impactgraph","axiomcodegraph","enola","code_system_graph","datahub","owasp_agent_harness"]).map(t => `
+    <div class="linked-tool">
+      <h4>${t}</h4>
+      <pre>${JSON.stringify(mockLinked(t, s), null, 2)}</pre>
+    </div>
+  `).join("");
+
+  // Bundle
+  const bundle = {
+    change_id: s.scenario_id,
+    repository: "demo-retail",
+    base_revision: "a".repeat(40),
+    head_revision: "b".repeat(40),
+    policy_id: "default-pr-policy",
+    policy_version: "0.2.0",
+    bundle_digest: "sha256:demo-" + s.scenario_id,
+    decision: displayDecision,
+    reasons: s.reasons,
+    checks: s.checks,
+    coverage_gaps: s.coverage_gaps,
+    policy_findings: s.policy_findings,
+  };
+  document.getElementById("resBundle").textContent = JSON.stringify(bundle, null, 2);
+}
+
+function mockLinked(tool, s) {
+  const base = {
+    impactgraph: { tool: "impactgraph", version: "0.4.2", assets: (s.impact.nodes||[]).length, edges: (s.impact.edges||[]).length },
+    axiomcodegraph: { tool: "axiomcodegraph", version: "1.1.0", impact_score: s.scenario_id === "demo-write-tool-escalation" ? 0.85 : 0.3 },
+    enola: { tool: "enola", version: "2.0.1", cross_repo_edges: s.scenario_id === "demo-column-rename" ? 2 : 0 },
+    code_system_graph: { tool: "code_system_graph", version: "0.9.0", canonical_ids: (s.impact.nodes||[]).map(n => n.id) },
+    datahub: { tool: "datahub", version: "0.13.0", lineage_freshness: s.scenario_id === "demo-column-rename" ? "stale" : "current" },
+    owasp_agent_harness: { tool: "owasp-agent-security-harness", version: "1.2.0", excessive_agency: s.scenario_id === "demo-write-tool-escalation" },
+  };
+  return base[tool] || { tool, version: "mock" };
+}
+
+function switchTab(el, panel) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  el.classList.add("active");
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+  document.getElementById("panel-" + panel).classList.add("active");
+}
+
+function escapeHtml(t) { return String(t).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" })[c]); }
+
+init();
+</script>
+</body>
+</html>

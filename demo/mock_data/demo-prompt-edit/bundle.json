@@ -1,0 +1,96 @@
+{
+  "change_id": "demo-prompt-edit",
+  "repository": "demo-retail",
+  "base_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "head_revision": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "diff_digest": "sha256:demo",
+  "created_at": "2026-10-29T19:15:40+00:00",
+  "policy_id": "default-pr-policy",
+  "policy_version": "0.2.0",
+  "policy_digest": "sha256:policy-demo",
+  "check_catalog_digest": "sha256:catalog-demo",
+  "bundle_digest": "sha256:demo-bundle",
+  "changed_paths": [
+    "agents/replenishment/prompts/system.md"
+  ],
+  "changed_asset_kinds": [
+    "ai.prompt"
+  ],
+  "required_check_ids": [
+    "agent-behavior-evals",
+    "static-manifest-validation"
+  ],
+  "checks": [
+    {
+      "check_id": "static-manifest-validation",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 105
+    },
+    {
+      "check_id": "agent-behavior-evals",
+      "status": "unsupported",
+      "exit_code": null,
+      "duration_ms": null,
+      "stdout_excerpt": "eval runner unavailable in this environment"
+    }
+  ],
+  "coverage_gaps": [
+    {
+      "gap_id": "gap-agent-behavior-unavailable",
+      "kind": "agent_eval",
+      "blocking": true,
+      "required": true
+    }
+  ],
+  "policy_findings": [],
+  "impact": {
+    "nodes": [
+      {
+        "id": "repo:demo-retail",
+        "label": "demo-retail repo",
+        "kind": "repository"
+      },
+      {
+        "id": "prompt:system",
+        "label": "system.md prompt",
+        "kind": "ai.prompt",
+        "path": "agents/replenishment/prompts/system.md"
+      },
+      {
+        "id": "agent:replenishment",
+        "label": "replenishment agent",
+        "kind": "agent"
+      }
+    ],
+    "edges": [
+      {
+        "source": "agent:replenishment",
+        "target": "prompt:system",
+        "kind": "REFERENCES_PROMPT"
+      }
+    ]
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev-prompt-1",
+      "evidence_type": "prompt_hash",
+      "observed_revision": "dddddddddddddddddddddddddddddddddddddddd",
+      "freshness": "current"
+    }
+  ],
+  "adapters": [
+    {
+      "name": "ai-agent",
+      "assets": 2,
+      "relationships": 1
+    }
+  ],
+  "reasons": [
+    "Mandatory check not proven passed: agent-behavior-evals (unsupported)"
+  ],
+  "decision": "INCOMPLETE",
+  "expected_decision": "INCOMPLETE",
+  "matches_expectation": true,
+  "duration_ms": 3200
+}

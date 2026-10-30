@@ -1,0 +1,15 @@
+{
+  "contract_id": "sales-v1",
+  "required_columns": {
+    "customer_id": "string",
+    "unit_price": "number",
+    "quantity": "integer",
+    "discount_rate": "number",
+    "net_sales": "number"
+  },
+  "invariants": [
+    "quantity >= 0",
+    "0 <= discount_rate <= 1",
+    "net_sales = unit_price * quantity * (1 - discount_rate)"
+  ]
+}

@@ -1,0 +1,821 @@
+{
+  "$defs": {
+    "Asset": {
+      "additionalProperties": false,
+      "properties": {
+        "asset_id": {
+          "minLength": 1,
+          "title": "Asset Id",
+          "type": "string"
+        },
+        "attributes": {
+          "additionalProperties": true,
+          "title": "Attributes",
+          "type": "object"
+        },
+        "criticality": {
+          "default": "unknown",
+          "enum": [
+            "critical",
+            "high",
+            "medium",
+            "low",
+            "unknown"
+          ],
+          "title": "Criticality",
+          "type": "string"
+        },
+        "identity_status": {
+          "default": "adapter_scoped",
+          "enum": [
+            "stable",
+            "adapter_scoped",
+            "provisional"
+          ],
+          "title": "Identity Status",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/AssetKind"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Path"
+        },
+        "repository": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Repository"
+        },
+        "revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Revision"
+        }
+      },
+      "required": [
+        "asset_id",
+        "kind",
+        "name"
+      ],
+      "title": "Asset",
+      "type": "object"
+    },
+    "AssetKind": {
+      "enum": [
+        "code.function",
+        "code.class",
+        "api.endpoint",
+        "data.table",
+        "data.column",
+        "data.model",
+        "business.metric",
+        "ai.agent",
+        "ai.prompt",
+        "ai.model_binding",
+        "ai.tool",
+        "ai.policy",
+        "test.check",
+        "deployment.config"
+      ],
+      "title": "AssetKind",
+      "type": "string"
+    },
+    "ChangeSet": {
+      "additionalProperties": false,
+      "properties": {
+        "base_revision": {
+          "title": "Base Revision",
+          "type": "string"
+        },
+        "change_id": {
+          "title": "Change Id",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "diff_digest": {
+          "title": "Diff Digest",
+          "type": "string"
+        },
+        "head_revision": {
+          "title": "Head Revision",
+          "type": "string"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "trigger": {
+          "default": "local_cli",
+          "enum": [
+            "pull_request",
+            "local_cli",
+            "scheduled_recheck"
+          ],
+          "title": "Trigger",
+          "type": "string"
+        }
+      },
+      "required": [
+        "change_id",
+        "repository",
+        "base_revision",
+        "head_revision",
+        "diff_digest"
+      ],
+      "title": "ChangeSet",
+      "type": "object"
+    },
+    "CheckRequirement": {
+      "enum": [
+        "mandatory",
+        "conditional",
+        "optional"
+      ],
+      "title": "CheckRequirement",
+      "type": "string"
+    },
+    "CheckStatus": {
+      "enum": [
+        "planned",
+        "passed",
+        "failed",
+        "error",
+        "timed_out",
+        "not_run",
+        "skipped_policy",
+        "unsupported"
+      ],
+      "title": "CheckStatus",
+      "type": "string"
+    },
+    "CoverageGap": {
+      "additionalProperties": false,
+      "properties": {
+        "blocking": {
+          "default": false,
+          "title": "Blocking",
+          "type": "boolean"
+        },
+        "gap_id": {
+          "minLength": 1,
+          "title": "Gap Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "unresolved_dependency",
+            "unsupported_asset",
+            "missing_lineage",
+            "stale_evidence",
+            "missing_required_test",
+            "check_not_run",
+            "runner_unavailable",
+            "insufficient_ai_trials",
+            "unknown_policy",
+            "probe_denied",
+            "budget_exhausted",
+            "flaky_baseline",
+            "unversioned_source",
+            "missing_baseline",
+            "artifact_missing",
+            "artifact_mismatch"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "remediation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Remediation"
+        },
+        "required": {
+          "default": false,
+          "title": "Required",
+          "type": "boolean"
+        },
+        "severity": {
+          "enum": [
+            "critical",
+            "high",
+            "medium",
+            "low"
+          ],
+          "title": "Severity",
+          "type": "string"
+        },
+        "subject_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Subject Refs",
+          "type": "array"
+        },
+        "why_it_matters": {
+          "title": "Why It Matters",
+          "type": "string"
+        }
+      },
+      "required": [
+        "gap_id",
+        "kind",
+        "severity",
+        "why_it_matters"
+      ],
+      "title": "CoverageGap",
+      "type": "object"
+    },
+    "EvidenceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_digest": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Artifact Digest"
+        },
+        "artifact_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Artifact Ref"
+        },
+        "evidence_id": {
+          "minLength": 1,
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "evidence_type": {
+          "title": "Evidence Type",
+          "type": "string"
+        },
+        "freshness": {
+          "default": "unknown",
+          "enum": [
+            "current",
+            "stale",
+            "unknown"
+          ],
+          "title": "Freshness",
+          "type": "string"
+        },
+        "input_digest": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Input Digest"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "observed_revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed Revision"
+        },
+        "producer_name": {
+          "title": "Producer Name",
+          "type": "string"
+        },
+        "producer_version": {
+          "title": "Producer Version",
+          "type": "string"
+        },
+        "subject_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Subject Refs",
+          "type": "array"
+        },
+        "support": {
+          "enum": [
+            "direct",
+            "derived",
+            "heuristic",
+            "manual"
+          ],
+          "title": "Support",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "producer_name",
+        "producer_version",
+        "evidence_type",
+        "support"
+      ],
+      "title": "EvidenceRecord",
+      "type": "object"
+    },
+    "PolicyFinding": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "enum": [
+            "BLOCK",
+            "WARN"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "rule_id": {
+          "title": "Rule Id",
+          "type": "string"
+        },
+        "subject_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Subject Refs",
+          "type": "array"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule_id",
+        "action",
+        "summary"
+      ],
+      "title": "PolicyFinding",
+      "type": "object"
+    },
+    "Relationship": {
+      "additionalProperties": false,
+      "properties": {
+        "impact_direction": {
+          "enum": [
+            "forward",
+            "reverse",
+            "both",
+            "none"
+          ],
+          "title": "Impact Direction",
+          "type": "string"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        },
+        "observed_revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed Revision"
+        },
+        "provenance_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Provenance Refs",
+          "type": "array"
+        },
+        "relation_type": {
+          "enum": [
+            "calls",
+            "imports",
+            "implements",
+            "reads_from",
+            "writes_to",
+            "transforms_to",
+            "exposes",
+            "consumes",
+            "uses_prompt",
+            "uses_model",
+            "grants_tool",
+            "validated_by",
+            "deployed_as",
+            "owns"
+          ],
+          "title": "Relation Type",
+          "type": "string"
+        },
+        "relationship_id": {
+          "minLength": 1,
+          "title": "Relationship Id",
+          "type": "string"
+        },
+        "resolution": {
+          "enum": [
+            "resolved",
+            "inferred",
+            "ambiguous",
+            "unresolved"
+          ],
+          "title": "Resolution",
+          "type": "string"
+        },
+        "source_asset_id": {
+          "minLength": 1,
+          "title": "Source Asset Id",
+          "type": "string"
+        },
+        "target_asset_id": {
+          "minLength": 1,
+          "title": "Target Asset Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "relationship_id",
+        "source_asset_id",
+        "target_asset_id",
+        "relation_type",
+        "impact_direction",
+        "resolution"
+      ],
+      "title": "Relationship",
+      "type": "object"
+    },
+    "ValidationCheck": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_digests": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Artifact Digests",
+          "type": "object"
+        },
+        "artifact_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Artifact Refs",
+          "type": "array"
+        },
+        "category": {
+          "enum": [
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "agent_behavior",
+            "quality",
+            "performance",
+            "manual"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "check_id": {
+          "minLength": 1,
+          "title": "Check Id",
+          "type": "string"
+        },
+        "command_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Command Ref"
+        },
+        "duration_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration Ms"
+        },
+        "environment_digest": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Environment Digest"
+        },
+        "exit_code": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exit Code"
+        },
+        "input_digest": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Input Digest"
+        },
+        "requirement": {
+          "$ref": "#/$defs/CheckRequirement"
+        },
+        "runner_image_digest": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Runner Image Digest"
+        },
+        "selection_reason": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Selection Reason",
+          "type": "array"
+        },
+        "status": {
+          "$ref": "#/$defs/CheckStatus",
+          "default": "planned"
+        },
+        "stdout_excerpt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stdout Excerpt"
+        }
+      },
+      "required": [
+        "check_id",
+        "category",
+        "requirement"
+      ],
+      "title": "ValidationCheck",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "adapters": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Adapters",
+      "type": "array"
+    },
+    "artifact_root": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Artifact Root"
+    },
+    "assets": {
+      "items": {
+        "$ref": "#/$defs/Asset"
+      },
+      "title": "Assets",
+      "type": "array"
+    },
+    "bundle_digest": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Bundle Digest"
+    },
+    "change": {
+      "$ref": "#/$defs/ChangeSet"
+    },
+    "check_catalog_digest": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Check Catalog Digest"
+    },
+    "checks": {
+      "items": {
+        "$ref": "#/$defs/ValidationCheck"
+      },
+      "title": "Checks",
+      "type": "array"
+    },
+    "coverage_gaps": {
+      "items": {
+        "$ref": "#/$defs/CoverageGap"
+      },
+      "title": "Coverage Gaps",
+      "type": "array"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "decision": {
+      "anyOf": [
+        {
+          "enum": [
+            "PASS",
+            "WARN",
+            "BLOCK",
+            "INCOMPLETE"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Decision"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/EvidenceRecord"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "plan": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Plan"
+    },
+    "policy_digest": {
+      "minLength": 1,
+      "title": "Policy Digest",
+      "type": "string"
+    },
+    "policy_findings": {
+      "items": {
+        "$ref": "#/$defs/PolicyFinding"
+      },
+      "title": "Policy Findings",
+      "type": "array"
+    },
+    "policy_id": {
+      "default": "default-pr-policy",
+      "title": "Policy Id",
+      "type": "string"
+    },
+    "policy_version": {
+      "default": "0.2.0",
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "relationships": {
+      "items": {
+        "$ref": "#/$defs/Relationship"
+      },
+      "title": "Relationships",
+      "type": "array"
+    },
+    "required_check_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Required Check Ids",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "0.2.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "change",
+    "policy_digest"
+  ],
+  "title": "EvidenceBundle",
+  "type": "object"
+}

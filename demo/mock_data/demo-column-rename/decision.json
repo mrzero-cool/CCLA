@@ -1,0 +1,7 @@
+{
+  "decision": "BLOCK",
+  "reasons": [
+    "Mandatory check failed: data-contract-tests",
+    "Coverage gap: dashboard contract stale"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "tool": "impactgraph",
+  "version": "0.4.2",
+  "assets": 6,
+  "edges": 4,
+  "changed_atoms": [
+    "data/dbt/manifest.json",
+    "data/dbt/models/stg_sales.sql",
+    "metrics/net_sales.yml"
+  ],
+  "affected_consumers": [
+    "table:sales",
+    "column:customer_id",
+    "column:client_id",
+    "metric:net_sales",
+    "dashboard:exec_dashboard"
+  ]
+}

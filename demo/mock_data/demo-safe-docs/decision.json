@@ -1,0 +1,6 @@
+{
+  "decision": "PASS",
+  "reasons": [
+    "No runtime asset changed; only the always-required fast check is selected."
+  ]
+}

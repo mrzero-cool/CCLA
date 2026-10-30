@@ -1,0 +1,145 @@
+{
+  "change_id": "demo-column-rename",
+  "repository": "demo-retail",
+  "base_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "head_revision": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "diff_digest": "sha256:demo",
+  "created_at": "2026-10-29T19:15:40+00:00",
+  "policy_id": "default-pr-policy",
+  "policy_version": "0.2.0",
+  "policy_digest": "sha256:policy-demo",
+  "check_catalog_digest": "sha256:catalog-demo",
+  "bundle_digest": "sha256:demo-bundle",
+  "changed_paths": [
+    "data/dbt/manifest.json",
+    "data/dbt/models/stg_sales.sql",
+    "metrics/net_sales.yml"
+  ],
+  "changed_asset_kinds": [
+    "data.table",
+    "data.column",
+    "data.metric"
+  ],
+  "required_check_ids": [
+    "data-contract-tests",
+    "static-manifest-validation"
+  ],
+  "checks": [
+    {
+      "check_id": "static-manifest-validation",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 95
+    },
+    {
+      "check_id": "data-contract-tests",
+      "status": "failed",
+      "exit_code": 1,
+      "duration_ms": 4500,
+      "stdout_excerpt": "CONTRACT_MISMATCH: column customer_id not found; expected client_id in net_sales"
+    }
+  ],
+  "coverage_gaps": [
+    {
+      "gap_id": "gap-dashboard-contract-stale",
+      "kind": "data_contract",
+      "blocking": true,
+      "required": true
+    }
+  ],
+  "policy_findings": [
+    {
+      "rule_id": "data_policy.column_rename_requires_contract_refresh",
+      "action": "BLOCK",
+      "summary": "Renamed column without refreshing downstream contract; data-layer impact detected."
+    }
+  ],
+  "impact": {
+    "nodes": [
+      {
+        "id": "repo:demo-retail",
+        "label": "demo-retail repo",
+        "kind": "repository"
+      },
+      {
+        "id": "table:sales",
+        "label": "stg_sales table",
+        "kind": "data.table",
+        "path": "data/dbt/models/stg_sales.sql"
+      },
+      {
+        "id": "column:customer_id",
+        "label": "customer_id column",
+        "kind": "data.column",
+        "path": "data/dbt/manifest.json"
+      },
+      {
+        "id": "column:client_id",
+        "label": "client_id column",
+        "kind": "data.column",
+        "path": "data/dbt/manifest.json"
+      },
+      {
+        "id": "metric:net_sales",
+        "label": "net_sales metric",
+        "kind": "data.metric",
+        "path": "metrics/net_sales.yml"
+      },
+      {
+        "id": "dashboard:exec_dashboard",
+        "label": "Executive dashboard",
+        "kind": "dashboard"
+      }
+    ],
+    "edges": [
+      {
+        "source": "table:sales",
+        "target": "column:customer_id",
+        "kind": "CONTAINS"
+      },
+      {
+        "source": "table:sales",
+        "target": "column:client_id",
+        "kind": "CONTAINS"
+      },
+      {
+        "source": "column:client_id",
+        "target": "metric:net_sales",
+        "kind": "DERIVES_FROM"
+      },
+      {
+        "source": "metric:net_sales",
+        "target": "dashboard:exec_dashboard",
+        "kind": "EXPOSES_API"
+      }
+    ]
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev-data-1",
+      "evidence_type": "dbt_manifest_hash",
+      "observed_revision": "cccccccccccccccccccccccccccccccccccccccc",
+      "freshness": "stale"
+    }
+  ],
+  "adapters": [
+    {
+      "name": "dbt-manifest",
+      "assets": 5,
+      "relationships": 4
+    },
+    {
+      "name": "sql-parser",
+      "assets": 2,
+      "relationships": 1
+    }
+  ],
+  "reasons": [
+    "Mandatory check failed: data-contract-tests",
+    "Coverage gap: dashboard contract stale"
+  ],
+  "decision": "BLOCK",
+  "expected_decision": "BLOCK",
+  "matches_expectation": true,
+  "duration_ms": 6100
+}

@@ -1,0 +1,8 @@
+{
+  "tool": "impactgraph",
+  "version": "0.4.2",
+  "assets": 0,
+  "edges": 0,
+  "changed_atoms": [],
+  "affected_consumers": []
+}

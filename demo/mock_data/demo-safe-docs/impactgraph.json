@@ -1,0 +1,13 @@
+{
+  "tool": "impactgraph",
+  "version": "0.4.2",
+  "assets": 2,
+  "edges": 1,
+  "changed_atoms": [
+    "README.md",
+    "docs/architecture.md"
+  ],
+  "affected_consumers": [
+    "file:README.md"
+  ]
+}

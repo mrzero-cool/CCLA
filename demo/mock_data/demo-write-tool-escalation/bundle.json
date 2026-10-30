@@ -1,0 +1,141 @@
+{
+  "change_id": "demo-write-tool-escalation",
+  "repository": "demo-retail",
+  "base_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "head_revision": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "diff_digest": "sha256:demo",
+  "created_at": "2026-10-29T19:15:40+00:00",
+  "policy_id": "default-pr-policy",
+  "policy_version": "0.2.0",
+  "policy_digest": "sha256:policy-demo",
+  "check_catalog_digest": "sha256:catalog-demo",
+  "bundle_digest": "sha256:demo-bundle",
+  "changed_paths": [
+    "agents/replenishment/agent.py",
+    "agents/replenishment/tool_manifest.json"
+  ],
+  "changed_asset_kinds": [
+    "code.function",
+    "ai.tool_manifest"
+  ],
+  "required_check_ids": [
+    "agent-security-smoke",
+    "agent-behavior-evals",
+    "static-manifest-validation"
+  ],
+  "checks": [
+    {
+      "check_id": "static-manifest-validation",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 110
+    },
+    {
+      "check_id": "python-unit-tests",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 3400
+    },
+    {
+      "check_id": "agent-security-smoke",
+      "status": "failed",
+      "exit_code": 1,
+      "duration_ms": 2100,
+      "stdout_excerpt": "NEW_WRITE_TOOL_DETECTED: write_purchase_orders requires human review"
+    },
+    {
+      "check_id": "agent-behavior-evals",
+      "status": "unsupported",
+      "exit_code": null,
+      "duration_ms": null,
+      "stdout_excerpt": "eval runner unavailable in this environment"
+    }
+  ],
+  "coverage_gaps": [
+    {
+      "gap_id": "gap-agent-evals-unavailable",
+      "kind": "agent_eval",
+      "blocking": false,
+      "required": false
+    }
+  ],
+  "policy_findings": [
+    {
+      "rule_id": "agent_policy.new_write_tool_requires_review",
+      "action": "BLOCK",
+      "summary": "New write tool grants purchase-order write access; manual review required."
+    }
+  ],
+  "impact": {
+    "nodes": [
+      {
+        "id": "repo:demo-retail",
+        "label": "demo-retail repo",
+        "kind": "repository"
+      },
+      {
+        "id": "agent:replenishment",
+        "label": "replenishment agent",
+        "kind": "agent",
+        "path": "agents/replenishment/agent.py"
+      },
+      {
+        "id": "manifest:tool_manifest",
+        "label": "tool_manifest.json",
+        "kind": "ai.tool_manifest",
+        "path": "agents/replenishment/tool_manifest.json"
+      },
+      {
+        "id": "tool:write_purchase_orders",
+        "label": "write_purchase_orders",
+        "kind": "ai.tool",
+        "access": "write"
+      }
+    ],
+    "edges": [
+      {
+        "source": "agent:replenishment",
+        "target": "manifest:tool_manifest",
+        "kind": "DECLARES"
+      },
+      {
+        "source": "manifest:tool_manifest",
+        "target": "tool:write_purchase_orders",
+        "kind": "GRANTS_TOOL"
+      },
+      {
+        "source": "tool:write_purchase_orders",
+        "target": "system:purchase_orders",
+        "kind": "WRITES_TO"
+      }
+    ]
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev-agent-1",
+      "evidence_type": "tool_manifest_hash",
+      "observed_revision": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "freshness": "current"
+    }
+  ],
+  "adapters": [
+    {
+      "name": "python-ast",
+      "assets": 3,
+      "relationships": 2
+    },
+    {
+      "name": "ai-agent",
+      "assets": 2,
+      "relationships": 1
+    }
+  ],
+  "reasons": [
+    "Mandatory check failed: agent-security-smoke",
+    "Policy BLOCK: agent_policy.new_write_tool_requires_review"
+  ],
+  "decision": "BLOCK",
+  "expected_decision": "BLOCK",
+  "matches_expectation": true,
+  "duration_ms": 5600
+}
